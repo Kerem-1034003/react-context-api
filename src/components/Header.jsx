@@ -1,29 +1,19 @@
 import { useContext } from "react";
-import { AppContext } from "../App";
+import { AppContext, ThemeContext } from "../App";
 
-export default function Header({ theme, setTheme }) {
+export default function Header() {
     const { user } = useContext(AppContext);
-    const handleCheckChange = () => {
-        if (theme === 'dark') {
-            setTheme('light');
-        } else {
-            setTheme('dark');
-        }
-    }
-
-    const handleButtonClick = () => {
-        console.log("CLICK!");
-    }
+    const { theme, toggleTheme, clearSettings } = useContext(ThemeContext);
 
     return (
         <header className={theme}>
             <div>
                 <div className="dark-mode-container">
-                    <input id="darkMode" type="checkbox" checked={theme === 'dark'} onChange={handleCheckChange}></input>
+                    <input id="darkMode" type="checkbox" checked={theme === 'dark'} onChange={toggleTheme}></input>
                     <label htmlFor="darkMode">Enable Dark Mode</label>
                 </div>
                 <div>
-                    <button className="clear-settings-btn" onClick={handleButtonClick}>Clear Locally Saved Settings</button>
+                    <button className="clear-settings-btn" onClick={clearSettings}>Clear Locally Saved Settings</button>
                 </div>
             </div>
             <div className="logo">

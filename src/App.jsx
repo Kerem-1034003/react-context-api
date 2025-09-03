@@ -6,26 +6,41 @@ import defaultTweets from './assets/data/tweets.js'
 import user from './assets/data/user.js'
 
 export const AppContext = createContext();
+export const ThemeContext = createContext();
 
 function App() {
-    const [tweets, setTweets] = useState(defaultTweets)
-    const [theme, setTheme] = useState('light');
+    const [tweets, setTweets] = useState(defaultTweets);
+
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'light';
+    });
 
     useEffect(() => {
-        theme === 'light'
-            ? document.body.style.backgroundColor = 'white'
-            : document.body.style.backgroundColor = 'black'
-    }, [theme])
+        document.body.style.backgroundColor = theme === 'light' ? 'white' : 'black';
+    }, [theme]);
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+    };
+
+    const clearSettings = () => {
+        localStorage.removeItem('theme');
+        setTheme('light');
+    };
 
     return (
         <AppContext.Provider value={{ user, tweets, setTweets }}>
-            <div className="container">
-                <Header theme={theme} setTheme={setTheme} />
-                <Tweets theme={theme} />
-                <RightSide theme={theme} />
-            </div>
+            <ThemeContext.Provider value={{ theme, toggleTheme, clearSettings }}>
+                <div className="container">
+                    <Header />
+                    <Tweets />
+                    <RightSide />
+                </div>
+            </ThemeContext.Provider>
         </AppContext.Provider>
-    )
+    );
 }
 
 export { App };
